@@ -77,6 +77,7 @@ void GLFWindow::init()
 	// Keep stored dimensions in sync if GLFW adjusted them
 	glfwGetFramebufferSize(m_window, &m_width, &m_height);
 	glViewport(0, 0, m_width, m_height);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void GLFWindow::pollEvents()
@@ -116,6 +117,27 @@ void GLFWindow::framebuffer_size_callback(GLFWwindow* window, int width, int hei
 
 void::GLFWindow::update()
 {
+	float currentFrame = glfwGetTime();
+	m_deltaTime = currentFrame - m_lastFrame;
+	m_lastFrame = currentFrame;
+
 	swapBuffers();
 	pollEvents();
+}
+
+void GLFWindow::processInput(glm::vec3& cameraPos, glm::vec3& cameraFront, glm::vec3& cameraUp)
+{
+
+	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(m_window, true);
+
+	float cameraSpeed = 2.5f * m_deltaTime;
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }

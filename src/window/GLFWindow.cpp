@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <window/GLFWindow.h>
+#include <camera/Camera.h>
 
 #include <stdexcept>
 #include <iostream>
@@ -125,19 +126,18 @@ void::GLFWindow::update()
 	pollEvents();
 }
 
-void GLFWindow::processInput(glm::vec3& cameraPos, glm::vec3& cameraFront, glm::vec3& cameraUp)
+void GLFWindow::processInput(Camera& camera)
 {
 
 	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(m_window, true);
 
-	float cameraSpeed = 2.5f * m_deltaTime;
 	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPos += cameraSpeed * cameraFront;
+		camera.ProcessKeyboard(FORWARD, m_deltaTime);
 	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPos -= cameraSpeed * cameraFront;
+		camera.ProcessKeyboard(BACKWARD, m_deltaTime);
 	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		camera.ProcessKeyboard(LEFT, m_deltaTime);
 	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		camera.ProcessKeyboard(RIGHT, m_deltaTime);
 }

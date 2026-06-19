@@ -1,6 +1,7 @@
 #pragma once
 
 #include <window/Window.h>
+#include <camera/Camera.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -39,7 +40,7 @@ public:
 	void update() 		override;
 	bool shouldClose()	override;
 	void shutdown() 	override;
-	void processInput(glm::vec3& cameraPos, glm::vec3& cameraFront, glm::vec3& cameraUp) override;
+	void processInput(Camera& camera) override;
 
 	int getWidth()	const override;
 	int getHeight() const override;
